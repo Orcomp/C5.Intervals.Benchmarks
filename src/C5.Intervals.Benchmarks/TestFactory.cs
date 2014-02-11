@@ -142,6 +142,10 @@ using Fasterflect;
         {
             var parameters = new Dictionary<string, object>();
             parameters.Add("intervals", data);
+            if (implementation == typeof(StaticFiniteIntervalList<,>))
+            {
+                parameters.Add("RemoveOverlapsInSortingOrder", false);
+            }
             return
                 implementation.MakeGenericType(new[] { typeof(IInterval<int>), typeof(int) })
                     .TryCreateInstance(parameters) as IIntervalCollection<IInterval<int>, int>;
