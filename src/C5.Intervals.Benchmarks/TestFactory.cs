@@ -46,10 +46,10 @@ using Fasterflect;
 
                     foreach (var size in collectionSizes)
                     {
-                        foreach (var queryRange in CreateQueryRanges(size))
-                        {
-                            var dataStructure = CreateIntervalCollection(implementation, dataset, size);
+                        var dataStructure = CreateIntervalCollection(implementation, dataset, size);
 
+                        foreach (var queryRange in CreateQueryRanges(dataStructure))
+                        {
                             yield return
                                 new TestConfigurationWithQueryRange
                                     {
@@ -143,12 +143,12 @@ using Fasterflect;
             get
             {
                 return new[]
-                           {
-                               new DataSet("NoOverlaps", false, IntervalsFactory.NoOverlaps),
-                               new DataSet("Meets", false, IntervalsFactory.Meets),
-                               new DataSet("Overlaps", true, IntervalsFactory.Overlaps),
-                               new DataSet("PineTreeForest", true, IntervalsFactory.PineTreeForest)
-                           };
+                {
+                    new DataSet("NoOverlaps", false, IntervalsFactory.NoOverlaps),
+                    new DataSet("Meets", false, IntervalsFactory.Meets),
+                    new DataSet("Overlaps", true, IntervalsFactory.Overlaps),
+                    new DataSet("PineTreeForest", true, IntervalsFactory.PineTreeForest)
+                };
             }
         }
 
@@ -160,14 +160,16 @@ using Fasterflect;
             }
         }
 
-        public QueryRange[] CreateQueryRanges(int size)
+        public QueryRange[] CreateQueryRanges(IIntervalCollection<IInterval<int>, int> dataStructure)
         {
+            var span = dataStructure.Span.High - dataStructure.Span.Low;
+
             return new[]
             {
-                new QueryRange("FirstHalf", new IntervalBase<int>(1, size / 2)),
-                new QueryRange("FirstTenth", new IntervalBase<int>(1, 10)),
-                new QueryRange("FirstTenth", new IntervalBase<int>((size / 2) - 5, (size / 2) + 5)),
-                new QueryRange("LastTenth", new IntervalBase<int>(size - 10, size)),
+                new QueryRange("FirstHalf", new IntervalBase<int>(dataStructure.Span.Low, span / 2)),
+                new QueryRange("FirstTenth", new IntervalBase<int>(dataStructure.Span.Low, span / 10)),
+                new QueryRange("MiddleTenth", new IntervalBase<int>((span / 2) - span / 20, (span / 2) + span / 20)),
+                new QueryRange("LastTenth", new IntervalBase<int>(dataStructure.Span.High - span / 10, dataStructure.Span.High)),
             };
         }
 
