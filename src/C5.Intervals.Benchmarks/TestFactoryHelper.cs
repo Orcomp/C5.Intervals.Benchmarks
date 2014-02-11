@@ -56,4 +56,9 @@ static internal class TestFactoryHelper
             .Select(x => x)
             .ToList();
     }
+
+    public static bool IsFinite(string name)
+    {
+        return name.Contains("Finite");
+    }
 }
