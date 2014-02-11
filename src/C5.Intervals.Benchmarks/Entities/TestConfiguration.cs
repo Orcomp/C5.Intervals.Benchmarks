@@ -9,11 +9,13 @@ namespace C5.Intervals.Benchmarks
         public string DataSetName { get; set; }
         public int NumberOfIntervals { get; set; }
     }
+
     public class CreateIntervalCollectionTestConfiguration : TestConfiguration
     {
         public Action CreateCollection { get; set; }
         public string CollectionName { get; set; }
     }
+
     public class IntervalCollectionTestConfiguration : TestConfiguration
     {
         public IIntervalCollection<IInterval<int>, int> IntervalCollection { get; set; }

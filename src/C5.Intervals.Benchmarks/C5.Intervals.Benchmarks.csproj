@@ -101,15 +101,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarker.cs" />
-    <Compile Include="IntervalExtensions.cs" />
-    <Compile Include="IntervalFactoryTest.cs" />
-    <Compile Include="IntervalsFactory.cs" />
+    <Compile Include="Extensions\IntervalExtensions.cs" />
+    <Compile Include="Factories\IntervalFactoryTest.cs" />
+    <Compile Include="Factories\IntervalsFactory.cs" />
     <Compile Include="IntervalsStaticPerformanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryRange.cs" />
-    <Compile Include="IntervalCollectionTestConfiguration.cs" />
-    <Compile Include="TestFactory.cs" />
-    <Compile Include="TestFactoryHelper.cs" />
+    <Compile Include="Entities\QueryRange.cs" />
+    <Compile Include="Entities\TestConfiguration.cs" />
+    <Compile Include="Factories\TestFactory.cs" />
+    <Compile Include="Factories\TestFactoryHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\C5.Intervals\C5.Intervals\C5.Intervals.csproj">
