@@ -16,9 +16,9 @@
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
         public void FindOverlapsByInterval(TestConfigurationWithQueryRange config)
         {
-            var action = new Action(() => config.IntervalCollection.FindOverlaps(config.QueryRangeInterval).Enumerate());
+            var action = new Action(() => config.IntervalCollection.FindOverlaps(config.QueryRange.Interval).Enumerate());
 
-            var testName = string.Format("{0}_{1}_{2}", "FindOverlapsByInterval", config.DataSetName, config.QueryRangeName);
+            var testName = string.Format("{0}_{1}_{2}", "FindOverlapsByInterval", config.DataSetName, config.QueryRange.Name);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
@@ -48,9 +48,9 @@
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
         public void FindGaps(TestConfigurationWithQueryRange config)
         {
-            var action = new Action(() => config.IntervalCollection.FindGaps(config.QueryRangeInterval).Enumerate());
+            var action = new Action(() => config.IntervalCollection.FindGaps(config.QueryRange.Interval).Enumerate());
 
-            var testName = string.Format("{0}_{1}_{2}", "FindGaps", config.DataSetName, config.QueryRangeName);
+            var testName = string.Format("{0}_{1}_{2}", "FindGaps", config.DataSetName, config.QueryRange.Name);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }

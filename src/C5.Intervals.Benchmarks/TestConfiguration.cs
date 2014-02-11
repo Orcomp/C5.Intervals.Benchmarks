@@ -25,14 +25,14 @@
             return string.Format("Type: {0}, DataSet: {1}, Count: {2}", this.IntervalCollection.GetType().Name, this.DataSetName, this.NumberOfIntervals);
         }
     }
+
     public class TestConfigurationWithQueryRange : TestConfiguration
     {
-        public string QueryRangeName { get; set; }
-        public IInterval<int> QueryRangeInterval { get; set; }
+        public QueryRange QueryRange { get; set; }
 
         public override string ToString()
         {
-            return string.Format("Type: {0}, DataSet: {1}, Count: {2}, QueryRange: {3}", this.IntervalCollection.GetType().Name, this.DataSetName, this.NumberOfIntervals, this.QueryRangeName);
+            return string.Format("Type: {0}, DataSet: {1}, Count: {2}, QueryRange: {3}", this.IntervalCollection.GetType().Name, this.DataSetName, this.NumberOfIntervals, this.QueryRange.Name);
         }
     }
 }

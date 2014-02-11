@@ -34,7 +34,6 @@ using Fasterflect;
         {
             var collectionSizes = CollectionSizes;
             var dataSets = DataSets;
-            var queryRangeNames = QueryRangeNames;
 
             foreach (var implementation in Implementations)
             {
@@ -47,16 +46,9 @@ using Fasterflect;
 
                     foreach (var size in collectionSizes)
                     {
-                        foreach (var queryRange in queryRangeNames)
+                        foreach (var queryRange in CreateQueryRanges(size))
                         {
                             var dataStructure = CreateIntervalCollection(implementation, dataset, size);
-
-                            IInterval<int> queryRangeInterval = null;
-
-                            if (queryRange == "FirstHalf")
-                            {
-                                queryRangeInterval = new IntervalBase<int>(1, size / 2);
-                            }
 
                             yield return
                                 new TestConfigurationWithQueryRange
@@ -64,8 +56,7 @@ using Fasterflect;
                                         IntervalCollection = dataStructure,
                                         NumberOfIntervals = size,
                                         DataSetName = dataset.Name,
-                                        QueryRangeName = queryRange,
-                                        QueryRangeInterval = queryRangeInterval
+                                        QueryRange = queryRange,
                                     };
                         }
                     }
@@ -169,22 +160,15 @@ using Fasterflect;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private static string[] QueryRangeNames
+        public QueryRange[] CreateQueryRanges(int size)
         {
-            // We need to refactor this to combine the QueryRangeNames with the actual intervals to query as well.
-            get
+            return new[]
             {
-                return new[]
-                           {
-                               "FirstHalf",
-                               // "FirstTenth",
-                               // "MiddleTenth",
-                               // "LastTenth"
-                           };
-            }
+                new QueryRange("FirstHalf", new IntervalBase<int>(1, size / 2)),
+                new QueryRange("FirstTenth", new IntervalBase<int>(1, 10)),
+                new QueryRange("FirstTenth", new IntervalBase<int>((size / 2) - 5, (size / 2) + 5)),
+                new QueryRange("LastTenth", new IntervalBase<int>(size - 10, size)),
+            };
         }
 
         private bool IsFinite(string name)
