@@ -37,9 +37,6 @@
 
         public static void Benchmark(this Action action, string testGroup, string testName, string testCase)
         {
-            // Check config file to see if TestName should be ingored or not. 
-            // If it should be ignored then 
-
             _testCases.Add(testCase);
 
             var test = new TestGroup(testGroup);

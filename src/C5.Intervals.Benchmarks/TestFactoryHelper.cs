@@ -15,9 +15,9 @@ static internal class TestFactoryHelper
             return new[]
             {
                 new DataSet("NoOverlaps", false, IntervalsFactory.NoOverlaps),
-                new DataSet("Meets", false, IntervalsFactory.Meets),
+               //  new DataSet("Meets", false, IntervalsFactory.Meets),
                 new DataSet("Overlaps", true, IntervalsFactory.Overlaps),
-                new DataSet("PineTreeForest", true, IntervalsFactory.PineTreeForest)
+                // new DataSet("PineTreeForest", true, IntervalsFactory.PineTreeForest)
             };
         }
     }
@@ -26,7 +26,7 @@ static internal class TestFactoryHelper
     {
         get
         {
-            return new[] { 100, 1000, 10000, };
+            return new[] {10, 100000, };
         }
     }
 

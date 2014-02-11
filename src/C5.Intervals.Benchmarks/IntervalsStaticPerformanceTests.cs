@@ -15,6 +15,7 @@ namespace C5.Intervals.Benchmarks
             Benchmarker.PlotResults();
         }
 
+        //[Ignore]
         [Test, TestCaseSource(typeof(CreateIntervalCollectionTestFactory), "TestCases")]
         public void Constructor(CreateIntervalCollectionTestConfiguration config)
         {
@@ -23,17 +24,18 @@ namespace C5.Intervals.Benchmarks
             config.CreateCollection.Benchmark(config.CollectionName, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
         public void FindOverlapsByInterval(IntervalCollectionTestConfigurationWithQueryRange config)
         {
             var action = new Action(() => config.IntervalCollection.FindOverlaps(config.QueryRange.Interval).Enumerate());
 
-            var testName = string.Format("{0}_{1}_{2}",
-                "FindOverlapsByInterval", config.DataSetName, config.QueryRange.Name);
+            var testName = string.Format("{0}_{1}_{2}", "FindOverlapsByInterval", config.DataSetName, config.QueryRange.Name);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
         public void FindOverlapsByValue(IntervalCollectionTestConfigurationWithQueryRange config)
         {
@@ -41,12 +43,12 @@ namespace C5.Intervals.Benchmarks
             var median = config.IntervalCollection.Span.Middle();
             var action = new Action(() => config.IntervalCollection.FindOverlaps(median).Enumerate());
 
-            var testName = string.Format("{0}_{1}_Center",
-                "FindOverlapsByValue", config.DataSetName);
+            var testName = string.Format("{0}_{1}_Center", "FindOverlapsByValue", config.DataSetName);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
         public void Gaps(IntervalCollectionTestConfiguration config)
         {
@@ -57,6 +59,7 @@ namespace C5.Intervals.Benchmarks
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
         public void LowestIntervals(IntervalCollectionTestConfiguration config)
         {
@@ -67,6 +70,7 @@ namespace C5.Intervals.Benchmarks
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
         public void HighestIntervals(IntervalCollectionTestConfiguration config)
         {
@@ -77,6 +81,7 @@ namespace C5.Intervals.Benchmarks
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
         public void Sorted(IntervalCollectionTestConfiguration config)
         {
@@ -87,6 +92,7 @@ namespace C5.Intervals.Benchmarks
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
         public void FindGaps(IntervalCollectionTestConfigurationWithQueryRange config)
         {
@@ -98,22 +104,15 @@ namespace C5.Intervals.Benchmarks
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Ignore]
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
         public void GetEnumerator(IntervalCollectionTestConfiguration config)
         {
-            AssertIntervalCollectionIsSorted(config.IntervalCollection);
             var action = new Action(() => config.IntervalCollection.Enumerate());
 
             var testName = string.Format("{0}_{1}", "GetEnumerator", config.DataSetName);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
-
-        private void AssertIntervalCollectionIsSorted(IIntervalCollection<IInterval<int>, int> intervalCollection)
-        {
-            IComparer<IInterval<int>> comparer = ComparerFactory<IInterval<int>>
-                .CreateComparer((x, y) => x.CompareLow(y) != 0 ? x.CompareLow(y) : x.CompareHigh(y));
-            Assert.True(intervalCollection.IsSorted(comparer));
         }
     }
 }
