@@ -140,11 +140,11 @@ using Fasterflect;
             Type implementation,
             IEnumerable<IInterval<int>> data)
         {
-            var paramters = new Dictionary<string, object>();
-            paramters.Add("intervals", data);
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("intervals", data);
             return
                 implementation.MakeGenericType(new[] { typeof(IInterval<int>), typeof(int) })
-                    .TryCreateInstance(paramters) as IIntervalCollection<IInterval<int>, int>;
+                    .TryCreateInstance(parameters) as IIntervalCollection<IInterval<int>, int>;
         }
 
         private static DataSet[] DataSets
