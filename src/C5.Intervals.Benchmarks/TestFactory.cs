@@ -39,7 +39,7 @@ using Fasterflect;
 
                             action = () =>
                             {
-                                implementationType.TryCreateInstanceWithValues(parameters);
+                                implementationType.TryCreateInstance(parameters);
                             };
                         }
                         yield return new CreateIntervalCollectionTestConfiguration
