@@ -2,12 +2,68 @@
 { 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
 using C5.Intervals;
 using Fasterflect;
 
+    public class CreateIntervalCollectionTestFactory
+    {
+        public IEnumerable<CreateIntervalCollectionTestConfiguration> TestCases()
+        {
+            var implementations = TestFactoryHelper.GetImplementations();
+            var dataSets = TestFactoryHelper.DataSets;
+            var collectionSizes = TestFactoryHelper.CollectionSizes;
+
+            foreach (var implementation in implementations)
+            {
+                foreach (var dataset in dataSets)
+                {
+                    foreach (var size in collectionSizes)
+                    {
+                        var data = dataset.IntervalsFactory(size);
+                        var implementationType = CreateTestType(implementation);
+                        
+                        Action action = null;
+                        if (HasParameterlessConstructor(implementation))
+                        {
+                            action = () =>
+                            {
+                                var dataStructure = implementationType
+                                    .TryCreateInstanceWithValues() as IIntervalCollection<IInterval<int>, int>;
+                                dataStructure.AddAll(data);
+                            };
+                        }
+                        else
+                        {
+                            var parameters = new Dictionary<string, object>();
+                            parameters.Add("intervals", data);
+
+                            action = () =>
+                            {
+                                implementationType.TryCreateInstanceWithValues(parameters);
+                            };
+                        }
+                        yield return new CreateIntervalCollectionTestConfiguration
+                        {
+                            CollectionName = implementation.Name,
+                            DataSetName = dataset.Name,
+                            NumberOfIntervals = size,
+                            CreateCollection = action
+                        };
+                    }
+                }
+            }
+        }
+
+        private static bool HasParameterlessConstructor(Type implementation)
+        {
+            return implementation.Constructor(Type.EmptyTypes) != null;
+        }
+
+        private Type CreateTestType(Type implementation)
+        {
+            return implementation.MakeGenericType(new[] {typeof (IInterval<int>), typeof (int)});
+        }
+    }
     public class TestFactory
     {
         private List<Type> Implementations { get; set; }
@@ -20,20 +76,13 @@ using Fasterflect;
 
         private void FindImplementations()
         {
-            // Instead of Assembly.Load we could look at the current directory and LoadFrom() all the assemblies we find in it.
-            Implementations =
-                Assembly.Load("C5.Intervals")
-                    .Types()
-                    .Where(x => x.Implements(typeof(IIntervalCollection<,>)))
-                    .Where(x => !x.Name.Contains("Old") && !x.Name.Contains("List2"))
-                    .Select(x => x)
-                    .ToList();
+            Implementations = TestFactoryHelper.GetImplementations();
         }
 
-        public IEnumerable<TestConfigurationWithQueryRange> TestCasesWithQueryRange()
+        public IEnumerable<IntervalCollectionTestConfigurationWithQueryRange> TestCasesWithQueryRange()
         {
-            var collectionSizes = CollectionSizes;
-            var dataSets = DataSets;
+            var collectionSizes = TestFactoryHelper.CollectionSizes;
+            var dataSets = TestFactoryHelper.DataSets;
 
             foreach (var implementation in Implementations)
             {
@@ -51,7 +100,7 @@ using Fasterflect;
                         foreach (var queryRange in CreateQueryRanges(dataStructure))
                         {
                             yield return
-                                new TestConfigurationWithQueryRange
+                                new IntervalCollectionTestConfigurationWithQueryRange
                                     {
                                         IntervalCollection = dataStructure,
                                         NumberOfIntervals = size,
@@ -64,10 +113,10 @@ using Fasterflect;
             }
         }
 
-        public IEnumerable<TestConfiguration> TestCases()
+        public IEnumerable<IntervalCollectionTestConfiguration> TestCases()
         {
-            var collectionSizes = CollectionSizes;
-            var dataSets = DataSets;
+            var collectionSizes = TestFactoryHelper.CollectionSizes;
+            var dataSets = TestFactoryHelper.DataSets;
 
             foreach (var implementation in Implementations)
             {
@@ -83,7 +132,7 @@ using Fasterflect;
                         var dataStructure = CreateIntervalCollection(implementation, dataset, size);
 
                         yield return
-                            new TestConfiguration
+                            new IntervalCollectionTestConfiguration
                                 {
                                     IntervalCollection = dataStructure,
                                     NumberOfIntervals = size,
@@ -94,10 +143,9 @@ using Fasterflect;
             }
         }
 
-
         private static IIntervalCollection<IInterval<int>, int> CreateIntervalCollection(
             Type implementation,
-            DataSet dataset,
+            TestFactoryHelper.DataSet dataset,
             int size)
         {
             var data = dataset.IntervalsFactory(size);
@@ -138,28 +186,6 @@ using Fasterflect;
                     .TryCreateInstance(parameters) as IIntervalCollection<IInterval<int>, int>;
         }
 
-        private static DataSet[] DataSets
-        {
-            get
-            {
-                return new[]
-                {
-                    new DataSet("NoOverlaps", false, IntervalsFactory.NoOverlaps),
-                    new DataSet("Meets", false, IntervalsFactory.Meets),
-                    new DataSet("Overlaps", true, IntervalsFactory.Overlaps),
-                    new DataSet("PineTreeForest", true, IntervalsFactory.PineTreeForest)
-                };
-            }
-        }
-
-        private static int[] CollectionSizes
-        {
-            get
-            {
-                return new[] { 100, 1000, 10000, };
-            }
-        }
-
         public QueryRange[] CreateQueryRanges(IIntervalCollection<IInterval<int>, int> dataStructure)
         {
             var span = dataStructure.Span.High - dataStructure.Span.Low;
@@ -176,22 +202,6 @@ using Fasterflect;
         private bool IsFinite(string name)
         {
             return name.Contains("Finite");
-        }
-
-        private class DataSet
-        {
-            public string Name { get; set; }
-
-            public bool HasOverlaps { get; set; }
-
-            public Func<int, IInterval<int>[]> IntervalsFactory { get; set; }
-
-            public DataSet(string name, bool hasOverlaps, Func<int, IInterval<int>[]> intervalsFactory)
-            {
-                Name = name;
-                HasOverlaps = hasOverlaps;
-                IntervalsFactory = intervalsFactory;
-            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace C5.Intervals.Benchmarks
 {
@@ -16,30 +15,40 @@ namespace C5.Intervals.Benchmarks
             Benchmarker.PlotResults();
         }
 
+        [Test, TestCaseSource(typeof(CreateIntervalCollectionTestFactory), "TestCases")]
+        public void Constructor(CreateIntervalCollectionTestConfiguration config)
+        {
+            var testName = string.Format("{0}_{1}", "Constructor", config.DataSetName);
+
+            config.CreateCollection.Benchmark(config.CollectionName, testName, config.NumberOfIntervals);
+        }
+
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
-        public void FindOverlapsByInterval(TestConfigurationWithQueryRange config)
+        public void FindOverlapsByInterval(IntervalCollectionTestConfigurationWithQueryRange config)
         {
             var action = new Action(() => config.IntervalCollection.FindOverlaps(config.QueryRange.Interval).Enumerate());
 
-            var testName = string.Format("{0}_{1}_{2}", "FindOverlapsByInterval", config.DataSetName, config.QueryRange.Name);
+            var testName = string.Format("{0}_{1}_{2}",
+                "FindOverlapsByInterval", config.DataSetName, config.QueryRange.Name);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
-        public void FindOverlapsByValue(TestConfigurationWithQueryRange config)
+        public void FindOverlapsByValue(IntervalCollectionTestConfigurationWithQueryRange config)
         {
             // TODO: We need test cases to check the performance at the start and end as well.
             var median = config.IntervalCollection.Span.Middle();
             var action = new Action(() => config.IntervalCollection.FindOverlaps(median).Enumerate());
 
-            var testName = string.Format("{0}_{1}_Center", "FindOverlapsByValue", config.DataSetName);
+            var testName = string.Format("{0}_{1}_Center",
+                "FindOverlapsByValue", config.DataSetName);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
-        public void Gaps(TestConfiguration config)
+        public void Gaps(IntervalCollectionTestConfiguration config)
         {
             var action = new Action(() => config.IntervalCollection.Gaps.Enumerate());
 
@@ -49,17 +58,18 @@ namespace C5.Intervals.Benchmarks
         }
 
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
-        public void FindGaps(TestConfigurationWithQueryRange config)
+        public void FindGaps(IntervalCollectionTestConfigurationWithQueryRange config)
         {
             var action = new Action(() => config.IntervalCollection.FindGaps(config.QueryRange.Interval).Enumerate());
 
-            var testName = string.Format("{0}_{1}_{2}", "FindGaps", config.DataSetName, config.QueryRange.Name);
+            var testName = string.Format("{0}_{1}_{2}",
+                "FindGaps", config.DataSetName, config.QueryRange.Name);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
-        public void GetEnumerator(TestConfiguration config)
+        public void GetEnumerator(IntervalCollectionTestConfiguration config)
         {
             AssertIntervalCollectionIsSorted(config.IntervalCollection);
             var action = new Action(() => config.IntervalCollection.Enumerate());

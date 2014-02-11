@@ -1,13 +1,23 @@
-﻿namespace C5.Intervals.Benchmarks
+﻿using System;
+
+namespace C5.Intervals.Benchmarks
 {
     using System.Collections.Generic;
 
-    public class TestConfiguration
+    public abstract class TestConfiguration
+    {
+        public string DataSetName { get; set; }
+        public int NumberOfIntervals { get; set; }
+    }
+    public class CreateIntervalCollectionTestConfiguration : TestConfiguration
+    {
+        public Action CreateCollection { get; set; }
+        public string CollectionName { get; set; }
+    }
+    public class IntervalCollectionTestConfiguration : TestConfiguration
     {
         public IIntervalCollection<IInterval<int>, int> IntervalCollection { get; set; }
         public IEnumerable<IInterval<int>> Data { get; set; } 
-        public int NumberOfIntervals { get; set; }
-        public string DataSetName { get; set; }
 
         public string Reference
         {
@@ -26,7 +36,7 @@
         }
     }
 
-    public class TestConfigurationWithQueryRange : TestConfiguration
+    public class IntervalCollectionTestConfigurationWithQueryRange : IntervalCollectionTestConfiguration
     {
         public QueryRange QueryRange { get; set; }
 
