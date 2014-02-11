@@ -1,4 +1,7 @@
-﻿namespace C5.Intervals.Benchmarks
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace C5.Intervals.Benchmarks
 {
     using System;
 
@@ -58,13 +61,19 @@
         [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
         public void GetEnumerator(TestConfiguration config)
         {
+            AssertIntervalCollectionIsSorted(config.IntervalCollection);
             var action = new Action(() => config.IntervalCollection.Enumerate());
 
             var testName = string.Format("{0}_{1}", "GetEnumerator", config.DataSetName);
 
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
+        }
 
-            // TODO: Need to assert  the collection that comes back from the enumerator is sorted.
+        private void AssertIntervalCollectionIsSorted(IIntervalCollection<IInterval<int>, int> intervalCollection)
+        {
+            IComparer<IInterval<int>> comparer = ComparerFactory<IInterval<int>>
+                .CreateComparer((x, y) => x.CompareLow(y) != 0 ? x.CompareLow(y) : x.CompareHigh(y));
+            Assert.True(intervalCollection.IsSorted(comparer));
         }
     }
 }
