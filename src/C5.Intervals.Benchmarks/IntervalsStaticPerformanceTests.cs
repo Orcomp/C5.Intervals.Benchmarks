@@ -57,6 +57,36 @@ namespace C5.Intervals.Benchmarks
             action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
         }
 
+        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
+        public void LowestIntervals(IntervalCollectionTestConfiguration config)
+        {
+            var action = new Action(() => config.IntervalCollection.LowestIntervals.Enumerate());
+
+            var testName = string.Format("{0}_{1}", "LowestIntervals", config.DataSetName);
+
+            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
+        }
+
+        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
+        public void HighestIntervals(IntervalCollectionTestConfiguration config)
+        {
+            var action = new Action(() => config.IntervalCollection.HighestIntervals.Enumerate());
+
+            var testName = string.Format("{0}_{1}", "HighestIntervals", config.DataSetName);
+
+            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
+        }
+
+        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
+        public void Sorted(IntervalCollectionTestConfiguration config)
+        {
+            var action = new Action(() => config.IntervalCollection.Sorted.Enumerate());
+
+            var testName = string.Format("{0}_{1}", "Sorted", config.DataSetName);
+
+            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
+        }
+
         [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
         public void FindGaps(IntervalCollectionTestConfigurationWithQueryRange config)
         {
