@@ -19,6 +19,11 @@ using Fasterflect;
                 {
                     foreach (var size in collectionSizes)
                     {
+                        if (TestFactoryHelper.IsFinite(implementation.Name) && dataset.HasOverlaps)
+                        {
+                            continue;
+                        }
+
                         var data = dataset.IntervalsFactory(size);
                         var implementationType = CreateTestType(implementation);
                         
@@ -88,7 +93,7 @@ using Fasterflect;
             {
                 foreach (var dataset in dataSets)
                 {
-                    if (this.IsFinite(implementation.Name) && dataset.HasOverlaps)
+                    if (TestFactoryHelper.IsFinite(implementation.Name) && dataset.HasOverlaps)
                     {
                         continue;
                     }
@@ -122,7 +127,7 @@ using Fasterflect;
             {
                 foreach (var dataset in dataSets)
                 {
-                    if (this.IsFinite(implementation.Name) && dataset.HasOverlaps)
+                    if (TestFactoryHelper.IsFinite(implementation.Name) && dataset.HasOverlaps)
                     {
                         continue;
                     }
@@ -197,11 +202,6 @@ using Fasterflect;
                 new QueryRange("MiddleTenth", new IntervalBase<int>((span / 2) - span / 20, (span / 2) + span / 20)),
                 new QueryRange("LastTenth", new IntervalBase<int>(dataStructure.Span.High - span / 10, dataStructure.Span.High)),
             };
-        }
-
-        private bool IsFinite(string name)
-        {
-            return name.Contains("Finite");
         }
     }
 }
