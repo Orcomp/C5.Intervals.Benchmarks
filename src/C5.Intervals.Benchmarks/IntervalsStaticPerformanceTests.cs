@@ -1,118 +1,132 @@
-﻿using System.Collections.Generic;
-
-namespace C5.Intervals.Benchmarks
+﻿namespace C5.Intervals.Benchmarks
 {
-    using System;
+	#region using...
 
-    using NUnit.Framework;
+	using Entities;
+	using Extensions;
+	using Factories;
+	using global::NUnitBenchmarker;
+	using NUnit.Framework;
 
-    [TestFixture]
-    public class IntervalsStaticPerformanceTests
-    {
-        [TestFixtureTearDown]
-        public void PlotResults()
-        {
-            Benchmarker.PlotResults();
-        }
+	#endregion
 
-        //[Ignore]
-        [Test, TestCaseSource(typeof(CreateIntervalCollectionTestFactory), "TestCases")]
-        public void Constructor(CreateIntervalCollectionTestConfiguration config)
-        {
-            var testName = string.Format("{0}_{1}", "Constructor", config.DataSetName);
+	[TestFixture]
+	public class IntervalsStaticPerformanceTests
+	{
+		[TestFixtureSetUp]
+		public void TestFixture()
+		{
+			Benchmarker.Init();
+		}
 
-            config.CreateCollection.Benchmark(config.CollectionName, testName, config.NumberOfIntervals);
-        }
+		[Test, TestCaseSource(typeof (CreateIntervalCollectionTestFactory), "TestCases")]
+		public void Constructor(CreateIntervalCollectionTestConfiguration config)
+		{
+			var testName = string.Format("{0}_{1}", "Constructor", config.DataSetName);
+			config.IsReusable = true;
+			config.Benchmark(testName, config.NumberOfIntervals, 5);
+		}
 
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
-        public void FindOverlapsByInterval(IntervalCollectionTestConfigurationWithQueryRange config)
-        {
-            var action = new Action(() => config.IntervalCollection.FindOverlaps(config.QueryRange.Interval).Enumerate());
+		[Test, TestCaseSource(typeof (TestFactory), "TestCasesWithQueryRange")]
+		public void FindGaps(TestConfigurationWithQueryRange config)
+		{
+			var testName = string.Format("{0}_{1}_{2}", "FindGaps", config.DataSetName, config.QueryRangeName);
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (i =>
+			{
+				var c = ((TestConfigurationWithQueryRange) i);
+				// TODO: We need test cases to check the performance at the start and end as well.
+				c.IntervalCollection.FindGaps(c.QueryRange.Interval).Enumerate();
+			});
+			config.Benchmark(testName, config.NumberOfIntervals, 10);
+		}
 
-            var testName = string.Format("{0}_{1}_{2}", "FindOverlapsByInterval", config.DataSetName, config.QueryRange.Name);
+		[Test, TestCaseSource(typeof (TestFactory), "TestCasesWithQueryRange")]
+		public void FindOverlapsByInterval(TestConfigurationWithQueryRange config)
+		{
+			var testName = string.Format("{0}_{1}_{2}", "FindOverlapsByInterval", config.DataSetName, config.QueryRangeName);
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (i =>
+			{
+				var c = ((TestConfigurationWithQueryRange) i);
+				// TODO: We need test cases to check the performance at the start and end as well.
+				c.IntervalCollection.FindOverlaps(c.QueryRange.Interval).Enumerate();
+			});
+			config.Benchmark(testName, config.NumberOfIntervals, 10);
+		}
 
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
 
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
-        public void FindOverlapsByValue(IntervalCollectionTestConfigurationWithQueryRange config)
-        {
-            // TODO: We need test cases to check the performance at the start and end as well.
-            var median = config.IntervalCollection.Span.Middle();
-            var action = new Action(() => config.IntervalCollection.FindOverlaps(median).Enumerate());
+		[Test, TestCaseSource(typeof (TestFactory), "TestCasesWithQueryRange")]
+		public void FindOverlapsByValue(TestConfigurationWithQueryRange config)
+		{
+			var testName = string.Format("{0}_{1}_Center", "FindOverlapsByValue", config.DataSetName);
 
-            var testName = string.Format("{0}_{1}_Center", "FindOverlapsByValue", config.DataSetName);
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (i =>
+			{
+				var c = ((TestConfigurationWithQueryRange) i);
+				// TODO: We need test cases to check the performance at the start and end as well.
+				c.IntervalCollection.FindOverlaps(c.Median).Enumerate();
+			});
+			config.Benchmark(testName, config.NumberOfIntervals, 10);
+		}
 
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
+		[Test, TestCaseSource(typeof (TestFactory), "TestCases")]
+		public void Gaps(TestConfiguration config)
+		{
+			var testName = string.Format("{0}_{1}", "Gaps", config.DataSetName);
 
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
-        public void Gaps(IntervalCollectionTestConfiguration config)
-        {
-            var action = new Action(() => config.IntervalCollection.Gaps.Enumerate());
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (c => ((TestConfiguration) c).IntervalCollection.Gaps.Enumerate());
+			config.Benchmark(testName, config.NumberOfIntervals, 5);
+		}
 
-            var testName = string.Format("{0}_{1}", "Gaps", config.DataSetName);
+		[Test, TestCaseSource(typeof (TestFactory), "TestCases")]
+		public void GetEnumerator(TestConfiguration config)
+		{
+			var testName = string.Format("{0}_{1}", "GetEnumerator", config.DataSetName);
 
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (c => ((TestConfiguration) c).IntervalCollection.Enumerate());
+			config.Benchmark(testName, config.NumberOfIntervals, 5);
+		}
 
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
-        public void LowestIntervals(IntervalCollectionTestConfiguration config)
-        {
-            var action = new Action(() => config.IntervalCollection.LowestIntervals.Enumerate());
 
-            var testName = string.Format("{0}_{1}", "LowestIntervals", config.DataSetName);
+		[Test, TestCaseSource(typeof (TestFactory), "TestCases")]
+		public void HighestIntervals(TestConfiguration config)
+		{
+			var testName = string.Format("{0}_{1}", "HighestIntervals", config.DataSetName);
 
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (c => ((TestConfiguration) c).IntervalCollection.HighestIntervals.Enumerate());
+			config.Benchmark(testName, config.NumberOfIntervals, 5);
+		}
 
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
-        public void HighestIntervals(IntervalCollectionTestConfiguration config)
-        {
-            var action = new Action(() => config.IntervalCollection.HighestIntervals.Enumerate());
+		[Test, TestCaseSource(typeof (TestFactory), "TestCases")]
+		public void LowestIntervals(TestConfiguration config)
+		{
+			var testName = string.Format("{0}_{1}", "LowestIntervals", config.DataSetName);
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (c => ((TestConfiguration) c).IntervalCollection.LowestIntervals.Enumerate());
+			config.Benchmark(testName, config.NumberOfIntervals, 5);
+		}
 
-            var testName = string.Format("{0}_{1}", "HighestIntervals", config.DataSetName);
 
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
-
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
-        public void Sorted(IntervalCollectionTestConfiguration config)
-        {
-            var action = new Action(() => config.IntervalCollection.Sorted.Enumerate());
-
-            var testName = string.Format("{0}_{1}", "Sorted", config.DataSetName);
-
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
-
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCasesWithQueryRange")]
-        public void FindGaps(IntervalCollectionTestConfigurationWithQueryRange config)
-        {
-            var action = new Action(() => config.IntervalCollection.FindGaps(config.QueryRange.Interval).Enumerate());
-
-            var testName = string.Format("{0}_{1}_{2}",
-                "FindGaps", config.DataSetName, config.QueryRange.Name);
-
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
-
-        [Ignore]
-        [Test, TestCaseSource(typeof(TestFactory), "TestCases")]
-        public void GetEnumerator(IntervalCollectionTestConfiguration config)
-        {
-            var action = new Action(() => config.IntervalCollection.Enumerate());
-
-            var testName = string.Format("{0}_{1}", "GetEnumerator", config.DataSetName);
-
-            action.Benchmark(config.Reference, testName, config.NumberOfIntervals);
-        }
-    }
+		[Test, TestCaseSource(typeof (TestFactory), "TestCases")]
+		public void Sorted(TestConfiguration config)
+		{
+			var testName = string.Format("{0}_{1}", "Sorted", config.DataSetName);
+			// Action does not modify the preparation data: 
+			config.IsReusable = true;
+			config.Run = (c => ((TestConfiguration) c).IntervalCollection.Sorted.Enumerate());
+			config.Benchmark(testName, config.NumberOfIntervals, 5);
+		}
+	}
 }
