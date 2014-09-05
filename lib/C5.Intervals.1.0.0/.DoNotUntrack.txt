@@ -1,3 +1,0 @@
-Built from:
-https://github.com/Orcomp/C5Intervals/commit/ee689f33a96bd680d5b904b33ce7ca2c9d2a6566
-Config: Release, all Contract checking turned off.
