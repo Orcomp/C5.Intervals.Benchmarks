@@ -39,13 +39,13 @@ The time we see is the average time of one Add operation while creating a 'size'
 The intervals are added in random permutated order (first generating in order count size, then permutate)
 The result shown is divided by size.
 
-![Performance testing](doc/img/Add.jpg) 
+![Performance testing](raw/master/doc/img/Add.jpg) 
 
 **Remove:**
 
 The time we see is the average time of one Remove operation while removing all intervals from a 'size' sized tree. In the preparation the intervals added in order (this time does not count anyway in the benchmark) but when removing the intervals the order is a random permutation. The result shown is divided by size.
 
-![Performance testing](doc/img/Remove.jpg) 
+![Performance testing](raw/master/doc/img/Remove.jpg) 
 
 
 **GetNetx().FindFirst:**
@@ -53,7 +53,7 @@ The time we see is the average time of one Remove operation while removing all i
 GetNext and GetPrevious implementation is lazy. The time we see is the _average_  FindFirst in a 'size' sized tree. All the intervalls searched in the tree, so in a 'size' sized tree it is a 'size' count operation, The order should not matter, but despite of this the searches followed each other in random permutated order.
 The result shown is divided by size.
 
-![Performance testing](doc/img/GetNext_First_Average.jpg) 
+![Performance testing](raw/master/doc/img/GetNext_First_Average.jpg) 
 
 
 **GetNetx().Enumerate All:** 
@@ -61,7 +61,7 @@ The result shown is divided by size.
 The time we see is the _average_ emumeration time in a 'size' sized tree. In all trees 100 picked (full) enumerations performed. The count of enumeration depends on what is the starting point within the tree,
 that's why the 100 repeat with different queries. The result you see is divided by 100.
 
-![Performance testing](doc/img/GetNext_Enumerate_All.jpg) 
+![Performance testing](raw/master/doc/img/GetNext_Enumerate_All.jpg) 
 
 **Conclusion:**
 
