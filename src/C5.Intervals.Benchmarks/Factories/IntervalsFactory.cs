@@ -76,6 +76,19 @@
             return CreateIntervalStream(x => length, x => 0, offset).Take(count);
         }
 
+        /// <summary>
+        ///    Offset
+        /// |---------> 
+        ///            |-|--|---|----|---|--|-|--|---|----|---|--|-
+        /// </summary>
+        public static IEnumerable<IInterval<int>> AccordionMeets(int count, int length = 1, int offset = 0)
+        {
+            Contract.Requires(0 <= count);
+            Contract.Requires(0 < length);
+
+            return CreateIntervalStream(x => length, x => 0, offset).Take(count);
+        }
+
         public static IInterval<int>[] Overlaps(int count)
         {
             return OverlapsConstantLength(count).ToArray();
