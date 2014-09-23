@@ -1,17 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C5.Intervals.Benchmarks", "C5.Intervals.Benchmarks\C5.Intervals.Benchmarks.csproj", "{5123D001-8186-4CD8-A8C6-F0B7B22173F2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C5.Intervals", "..\..\C5.Intervals\C5.Intervals\C5.Intervals.csproj", "{6C61DD88-12EC-4A7D-907C-56A8FD72EDB2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{70696985-2B77-4F8A-84CA-221809409817}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C5", "..\..\C5.Intervals\C5\C5.csproj", "{D02E0664-C56C-4C3F-98E5-C8EC881A8439}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,18 +17,6 @@ Global
 		{5123D001-8186-4CD8-A8C6-F0B7B22173F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5123D001-8186-4CD8-A8C6-F0B7B22173F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5123D001-8186-4CD8-A8C6-F0B7B22173F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C61DD88-12EC-4A7D-907C-56A8FD72EDB2}.CodeAnalysis|Any CPU.ActiveCfg = CodeAnalysis|Any CPU
-		{6C61DD88-12EC-4A7D-907C-56A8FD72EDB2}.CodeAnalysis|Any CPU.Build.0 = CodeAnalysis|Any CPU
-		{6C61DD88-12EC-4A7D-907C-56A8FD72EDB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C61DD88-12EC-4A7D-907C-56A8FD72EDB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C61DD88-12EC-4A7D-907C-56A8FD72EDB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C61DD88-12EC-4A7D-907C-56A8FD72EDB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D02E0664-C56C-4C3F-98E5-C8EC881A8439}.CodeAnalysis|Any CPU.ActiveCfg = CodeAnalysis|Any CPU
-		{D02E0664-C56C-4C3F-98E5-C8EC881A8439}.CodeAnalysis|Any CPU.Build.0 = CodeAnalysis|Any CPU
-		{D02E0664-C56C-4C3F-98E5-C8EC881A8439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D02E0664-C56C-4C3F-98E5-C8EC881A8439}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D02E0664-C56C-4C3F-98E5-C8EC881A8439}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D02E0664-C56C-4C3F-98E5-C8EC881A8439}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
